@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700&display=swap">
+    <script src="https://cdn.socket.io/socket.io-4.0.0.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="circle">
+            <div class="ring outer-ring"></div>
+            <div class="ring inner-ring"></div>
+            <div class="label" style="font-size: 30px; font-family: Exo;" class="h55">JARVIS</div>
+        </div>
+    </div>
+    <div class="container8" id="draggable">
+        <div class="topright"></div>
+        <div class="topleft"></div>
+        <div class="bottomleft"></div>
+        <div class="bottomright"></div>
+        <div class="topbar2">
+            <div class="title"><span class="bold">TIME</span></div>
+        </div>
+        <div class="main">
+            <div class="box-test">
+                <hr>
+                <div class="content"></div> 
+                <p id="time" class="time"></p>
+            </div>
+        </div>
+    </div>
+    <div class="container13" id="draggable6">
+        <div class="topright"></div>
+        <div class="topleft"></div>
+        <div class="bottomleft"></div>
+        <div class="bottomright"></div>
+        <div class="topbar2">
+            <div class="title"><span class="bold">WEATHER</span></div>
+        </div>
+        <div class="main">
+            <div class="box-test">
+                <hr>
+                <div class="content">
+                
+                <p id="weatherTemperature" style="font-family: 'Exo'; font-weight: bold; font-size: 50px; margin-top: 0;"></p>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div class="container14" id="draggable7">
+        <div class="topright"></div>
+        <div class="topleft"></div>
+        <div class="bottomleft"></div>
+        <div class="bottomright"></div>
+        <div class="topbar2">
+            <div class="title"><span class="bold">CALCULATOR</span></div>
+        </div>
+        <div class="main">
+            <div class="box-test">
+                <hr>
+                <div class="content">
+                
+                    <iframe src="https://www.desmos.com/scientific" frameborder="0" width="400" height="300" allowfullscreen="" style="padding: 5px;" scrolling="No"></iframe>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <div class="container15" id="draggable8">
+        <div class="topright"></div>
+        <div class="topleft"></div>
+        <div class="bottomleft"></div>
+        <div class="bottomright"></div>
+        <div class="topbar2">
+            <div class="title"><span class="bold">TICTACTOE</span></div>
+        </div>
+        <div class="main">
+            <div class="box-test">
+                <hr>
+                <div class="content">
+                
+                    <iframe src="/static/Tic-Tac-Toe/index.html" frameborder="0" width="300" height="300" allowfullscreen="" style="margin-top: 0; padding: 1px;"></iframe>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <script src="/static/time.js"></script>
+    <script src="/static/Audio Player/js/playlist.js"></script>
+    <script src="/static/Audio Player/js/script.js"></script>
+    <script src="/static/draggables/draggable.js"></script>
+    <script src="/static/draggables/draggable2.js"></script>
+    <script src="/static/draggables/draggable3.js"></script>
+    <script src="/static/draggables/draggable4.js"></script>
+    <script src="/static/draggables/draggable5.js"></script>
+    <script src="/static/draggables/draggable6.js"></script>
+    <script src="/static/draggables/draggable7.js"></script>
+    <script src="/static/draggables/draggable8.js"></script>
+    
+    <script>
+        window.onload = function() {
+            var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+    
+            recognition.onresult = function(event) {
+                const speechResult = event.results[event.resultIndex][0].transcript.trim().toLowerCase();
+                console.log('Recognized:', speechResult);
+    
+                if (speechResult.includes('what time is it') || speechResult.includes('tell me the time') || speechResult.includes('show me the time')) {
+                    showTimeWidget();
+                }
+                else if (speechResult.includes('open calculator') || speechResult.includes('show me the calculator') || speechResult.includes('calculator')) {
+                    showCalcWidget(); 
+                }
+                else if (speechResult.includes('tic tac') || speechResult.includes('tictac')) {
+                    showTicTacWidget(); 
+                }
+                else if (speechResult.includes('the weather') || speechResult.includes('tempurature') || speechResult.includes('show me the weather') || speechResult.includes('display the weather')) {
+                    showWeatherWidget(); 
+                }
+                else if (speechResult.includes('clear')) {
+                    removeAllWidgets();
+                }
+                
+                
+            };
+    
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event);
+                if (event.error === "no-speech") {
+                    console.log('No speech detected, restarting...');
+                    recognition.start(); // Restart recognition
+                }
+            };
+    
+            recognition.onend = function() {
+                console.log('Recognition ended, restarting...');
+                recognition.start();
+            };
+    
+            recognition.start();
+            startClock();
+        };
+    
+        function startClock() {
+            setInterval(updateTime, 1000); // Update the time every second
+        }
+    </script>
+    <script>
+        function removeAllWidgets() {
+            const widgets = document.querySelectorAll('.container8, .container9, .container10, .container11, .container12, .container13, .container14, .container15');
+            widgets.forEach(widget => widget.style.display = 'none');
+        }
+    </script>
+    <script src="/static/updatetime.js"></script>
+    <script src="/static/script.js"></script>
+    <script src="/static/showwidgets.js"></script>
+    <script src="/static/weather.js"></script>
+</body>
+</html>
